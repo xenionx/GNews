@@ -1,3 +1,4 @@
+import os
 import ssl
 import pandas as pd
 from gnews import GNews
@@ -12,7 +13,12 @@ data = pd.read_excel(file_path)
 
 # Set up the search parameters
 start_year = 2013
-end_year = 2014
+end_year = 2023
+
+# Create 'Output' directory if it doesn't exist
+output_dir = 'Output'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 # Dictionary to store results by website and year
 results_dict = defaultdict(lambda: defaultdict(list))
@@ -71,7 +77,7 @@ for keyword in keywords:
 
 # Create an Excel writer for each website
 for site, yearly_data in results_dict.items():
-    output_file = f'{site}_mentions_by_year.xlsx'
+    output_file = os.path.join(output_dir, f'{site}_mentions_by_year.xlsx')
     with pd.ExcelWriter(output_file) as writer:
         # Iterate over each year to create worksheets
         for year, mentions in yearly_data.items():
@@ -80,4 +86,4 @@ for site, yearly_data in results_dict.items():
             # Write each year's data to the respective worksheet
             df_year.to_excel(writer, sheet_name=str(year), index=False)
 
-print("Excel files created successfully for each website.")
+print("Excel files created successfully for each website inside the 'Output' folder.")
