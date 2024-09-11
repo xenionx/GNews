@@ -3,6 +3,7 @@ import ssl
 import pandas as pd
 from gnews import GNews
 from collections import defaultdict
+from datetime import datetime  # Import for timestamp
 
 # SSL Context (use with caution)
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -77,7 +78,10 @@ for keyword in keywords:
 
 # Create an Excel writer for each website
 for site, yearly_data in results_dict.items():
-    output_file = os.path.join(output_dir, f'{site}_mentions_by_year.xlsx')
+    # Create a timestamp to make the filename unique
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    output_file = os.path.join(output_dir, f'{site}_mentions_by_year_{timestamp}.xlsx')
+
     with pd.ExcelWriter(output_file) as writer:
         # Iterate over each year to create worksheets
         for year, mentions in yearly_data.items():
